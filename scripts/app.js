@@ -34,7 +34,15 @@ define([
   // valueStream :: Dom -> EventStream String
   var valueStream = compose(map(eventValue), keypressStream);
 
+  // termUrl :: String -> URL
+  var termUrl = function(term) {
+    return "http://gdata.youtube.com/feeds/api/videos?" +
+    $.param({q: term, alt: 'json'});
+  }
+
   // urlStream :: Dom -> EventStream URL
+  var urlStream = compose(map(termUrl), valueStream);
+
   // IMPURE ////////////////////////////////////////////////////////////////////////////
-  getDom('#search').map(valueStream).runIO().onValue(log);
+  getDom('#search').map(urlStream).runIO().onValue(log);
 });
