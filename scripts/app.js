@@ -28,9 +28,13 @@ define([
   // keypressStream :: Dom -> EventStream DomEvent
   var keypressStream = listen('keyup');
 
-  // valueStream :: Dom -> EventStream String
-  var valueStream = compose(map(compose(_.get('value'), _.get('target'))), keypressStream);
+  // eventValue :: DomEvent -> String
+  var eventValue = compose(_.get('value'), _.get('target'));
 
+  // valueStream :: Dom -> EventStream String
+  var valueStream = compose(map(eventValue), keypressStream);
+
+  // urlStream :: Dom -> EventStream URL
   // IMPURE ////////////////////////////////////////////////////////////////////////////
   getDom('#search').map(valueStream).runIO().onValue(log);
 });
